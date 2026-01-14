@@ -1,0 +1,92 @@
+// ====== Tracks ======
+const tracks = [
+  { title: "Sunrise Drive", artist: "Ava Kent", src: "samples/track1.mp3" },
+  { title: "Midnight Sketch", artist: "Leo Park", src: "samples/track2.mp3" },
+  { title: "Quiet Fields", artist: "Mira Chen", src: "samples/track3.mp3" },
+];
+
+// ====== DOM ======
+const audio = document.getElementById("audio");
+const titleEl = document.getElementById("title");
+const artistEl = document.getElementById("artist");
+const playPauseBtn = document.getElementById("playPauseBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const currentTimeEl = document.getElementById("currentTime");
+const totalTimeEl = document.getElementById("totalTime");
+const progressEl = document.getElementById("progress");
+const volumeEl = document.getElementById("volume");
+const muteBtn = document.getElementById("muteBtn");
+const playlistEl = document.getElementById("playlist");
+const autoplayToggle = document.getElementById("autoplayToggle");
+
+let index = 0;
+
+// ====== Functions ======
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+function loadTrack(i) {
+  index = (i + tracks.length) % tracks.length;
+  const t = tracks[index];
+  audio.src = t.src;
+  titleEl.textContent = t.title;
+  artistEl.textContent = t.artist;
+  playPauseBtn.textContent = "▶️";
+}
+
+function play() {
+  audio.play();
+  playPauseBtn.textContent = "⏸";
+}
+function pause() {
+  audio.pause();
+  playPauseBtn.textContent = "▶️";
+}
+function togglePlay() { audio.paused ? play() : pause(); }
+function next() { loadTrack(index + 1); play(); }
+function prev() { loadTrack(index - 1); play(); }
+
+function buildPlaylist() {
+  playlistEl.innerHTML = "";
+  tracks.forEach((t, i) => {
+    const li = document.createElement("li");
+    li.className = "track";
+    li.textContent = `${t.title} - ${t.artist}`;
+    li.addEventListener("click", () => { loadTrack(i); play(); });
+    playlistEl.appendChild(li);
+  });
+}
+
+// ====== Events ======
+playPauseBtn.addEventListener("click", togglePlay);
+nextBtn.addEventListener("click", next);
+prevBtn.addEventListener("click", prev);
+
+audio.addEventListener("loadedmetadata", () => {
+  totalTimeEl.textContent = formatTime(audio.duration);
+});
+audio.addEventListener("timeupdate", () => {
+  progressEl.value = (audio.currentTime / audio.duration) * 100;
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+progressEl.addEventListener("input", (e) => {
+  audio.currentTime = (e.target.value / 100) * audio.duration;
+});
+volumeEl.addEventListener("input", (e) => {
+  audio.volume = e.target.value / 100;
+});
+muteBtn.addEventListener("click", () => {
+  audio.muted = !audio.muted;
+  muteBtn.textContent = audio.muted ? "🔇" : "🔈";
+});
+audio.addEventListener("ended", () => {
+  if (autoplayToggle.checked) next();
+});
+
+// ====== Init ======
+buildPlaylist();
+loadTrack(0);
