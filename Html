@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JavaScript Music Player</title>
+  <!-- Link CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="player">
+    <!-- Now Playing -->
+    <section class="now-playing">
+      <div class="cover" id="cover">
+        <div class="placeholder">No cover</div>
+      </div>
+      <div class="title" id="title">—</div>
+      <div class="artist" id="artist">—</div>
+
+      <div class="controls">
+        <button class="btn" id="prevBtn">⏮</button>
+        <button class="btn primary" id="playPauseBtn">▶️</button>
+        <button class="btn" id="nextBtn">⏭</button>
+      </div>
+
+      <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+      <input type="range" class="range" id="progress" min="0" max="100" value="0" />
+
+      <div class="volume-row">
+        <span class="label">Volume</span>
+        <input type="range" class="range" id="volume" min="0" max="100" value="80" />
+        <button class="btn" id="muteBtn">🔈</button>
+      </div>
+    </section>
+
+    <!-- Playlist -->
+    <section class="playlist">
+      <div class="playlist-header">
+        <div class="playlist-title">Playlist</div>
+        <label class="autoplay">
+          <input type="checkbox" id="autoplayToggle" />
+          Autoplay next
+        </label>
+      </div>
+      <ul class="list" id="playlist"></ul>
+    </section>
+  </div>
+
+  <!-- Hidden audio element -->
+  <audio id="audio" preload="metadata"></audio>
+
+  <!-- Link JS -->
+  <script src="script.js"></script>
+</body>
+</html>
